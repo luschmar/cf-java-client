@@ -1,0 +1,16 @@
+---
+applications:
+  - name: quebec-application
+sidecars:
+  -
+    command: "bundle exec run-authenticator"
+    name: authenticator
+    process_types:
+      - web
+      - worker
+  -
+    command: "bundle exec run-performance-monitor"
+    memory: 128M
+    name: "performance monitor"
+    process_types:
+      - web

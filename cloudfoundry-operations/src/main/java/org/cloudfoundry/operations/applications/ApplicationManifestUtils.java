@@ -300,6 +300,16 @@ public final class ApplicationManifestUtils {
         return Route.builder().route(route).build();
     }
 
+    @SuppressWarnings("unchecked")
+    private static Sidecar getSidecar(Map<String, Object> raw) {
+        Sidecar.Builder builder = Sidecar.builder();
+        asString(raw, "name", Collections.emptyMap(), builder::name);
+        asListOfString(raw, "process_types", Collections.emptyMap(), builder::processTypes);
+        asString(raw, "command", Collections.emptyMap(), builder::command);
+        asMemoryInteger(raw, "memory", Collections.emptyMap(), builder::memory);
+        return builder.build();
+    }
+
     private static ApplicationManifest getTemplate(Path path, Map<String, Object> root, Map<String, String> variables) {
         return toApplicationManifest(root, variables, ApplicationManifest.builder(), path)
             .name("template")
@@ -381,6 +391,7 @@ public final class ApplicationManifestUtils {
         asListOfString(application, "services", variables, builder::service);
         asString(application, "stack", variables, builder::stack);
         asInteger(application, "timeout", variables, builder::timeout);
+        asList(application, "sidecars", variables, raw -> getSidecar((Map<String, Object>) raw), builder::sidecar);
 
         return builder;
     }
@@ -421,6 +432,7 @@ public final class ApplicationManifestUtils {
         putIfPresent(yaml, "services", applicationManifest.getServices());
         putIfPresent(yaml, "stack", applicationManifest.getStack());
         putIfPresent(yaml, "timeout", applicationManifest.getTimeout());
+        putIfPresent(yaml, "sidecars", applicationManifest.getSidecars());
 
         return yaml;
     }

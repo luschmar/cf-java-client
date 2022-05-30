@@ -470,6 +470,29 @@ public final class ApplicationManifestUtilsTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Test
+    public void readSidecars() throws IOException {
+        List<ApplicationManifest> expected = Collections.singletonList(
+            ApplicationManifest.builder()
+                .name("quebec-application")
+                .sidecars(Sidecar.builder()
+                    .name("authenticator")
+                    .processType("web")
+                    .processType("worker")
+                    .command("bundle exec run-authenticator")
+                    .build())
+                .sidecars(Sidecar.builder()
+                    .name("performance monitor")
+                    .processType("web")
+                    .command("bundle exec run-performance-monitor")
+                    .memory(128)
+                    .build())
+                .build());
+
+        List<ApplicationManifest> actual = ApplicationManifestUtils.read(new ClassPathResource("fixtures/manifest-quebec.yml").getFile().toPath());
+
+        assertThat(actual).isEqualTo(expected);
+    }
 
     @Test
     public void unixRead() throws IOException {

@@ -197,4 +197,7 @@ abstract class _ApplicationManifest {
     @Nullable
     abstract Integer getTimeout();
 
+    @Nullable
+    abstract List<Sidecar> getSidecars();
+
 }
